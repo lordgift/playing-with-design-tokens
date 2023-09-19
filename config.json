@@ -11,13 +11,22 @@
     },
     "android": {
       "transformGroup": "android",
-      "buildPath": "build/android/",
+      "buildPath": "android/styledictionary/src/main/res/values/",
       "files": [{
-        "destination": "font_dimens.xml",
+        "destination": "style_dictionary_colors.xml",
+        "format": "android/colors"
+      },{
+        "destination": "style_dictionary_font_dimens.xml",
         "format": "android/fontDimens"
       },{
-        "destination": "colors.xml",
-        "format": "android/colors"
+        "destination": "style_dictionary_dimens.xml",
+        "format": "android/dimens"
+      },{
+        "destination": "style_dictionary_integers.xml",
+        "format": "android/integers"
+     },{
+        "destination": "style_dictionary_strings.xml",
+        "format": "android/strings"
       }]
     },
     "compose": {
