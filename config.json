@@ -5,7 +5,7 @@
   "platforms": {
     "android": {
       "transformGroup": "android",
-      "buildPath": "android/styledictionary/src/main/res/values/",
+      "buildPath": "build/android/styledictionary/src/main/res/values/",
       "files": [
         {
           "destination": "style_dictionary_colors.xml",
