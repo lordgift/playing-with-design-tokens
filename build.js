@@ -187,8 +187,22 @@ function extractToComponents(tokenValue) {
         // tokenValue is UIColor e.g.UIColor(red: 0.823, green: 0.890, blue: 0.210, alpha: 1)
         else if (tokenValue.startsWith("UIColor")) {
             var cleaupSwift = tokenValue.replace(/UIColor\(/, "{").replace(/\)/, "}")
-            var fixedJSON = cleaupSwift.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": '); 
-            jsonComponents = JSON.parse(fixedJSON); 
+            var appendedQuot = cleaupSwift.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": '); 
+            jsonComponents = JSON.parse(appendedQuot); 
+/* 
+  "components": {
+    "red": 0.004,
+    "green": 0.275,
+    "blue": 0.447,
+    "alpha": 1
+   }
+*/
+        } 
+
+        // tokenValue is rgba e.g.rgba(255, 255, 255, 0.08)
+        else if (tokenValue.startsWith("rgba")) {
+            var jsonRGBA = tokenValue.replace(/rgba\((\d+),\W?(\d+),\W?(\d+),\W?(\d+.\d+)\)/g, `{"red": "$1", "blue": "$2", "green": "$3", "alpha": "$4"}`); 
+            jsonComponents = JSON.parse(jsonRGBA); 
 /* 
   "components": {
     "red": 0.004,
@@ -200,7 +214,7 @@ function extractToComponents(tokenValue) {
         } 
 
         else {
-            console.error("Mismatch pattern for tokenValue.");
+            console.error(`Mismatch pattern for tokenValue = ${tokenValue}`);
         }
         
         return jsonComponents;
