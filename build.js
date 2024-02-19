@@ -98,10 +98,12 @@ StyleDictionary.registerFormat({
     formatter: ({ dictionary }) => {
 
 
+        var classContents = "";
+
         //Generate xcassets
         const assetsDir = 'build/ios-swift/ColorSet.xcassets';
         dictionary.allProperties
-            .filter(token => token.attributes.category === 'color')
+            .filter(token => token.type === 'color')
             .forEach(token => {
 
                 // console.log(token);
@@ -125,6 +127,8 @@ StyleDictionary.registerFormat({
                 fs.writeFileSync(file, JSON.stringify(contents, null, 2));
 
                 console.warn(`\x1b[1;33m✔︎ ${file}`);
+
+                classContents += `static var ${token.name}: Color { Color("${token.name}")}\n\t`
             });
 
 
@@ -148,12 +152,8 @@ StyleDictionary.registerFormat({
 import SwiftUI
 
 extension ShapeStyle where Self == Color {
-    ${dictionary.allTokens.map(function (token) {
-        return `static var ${token.name}: Color { Color("${token.name}")}`
-    }).join('\n\t')}
+    ${classContents}
 }`;
-
-
 
     }
 });
