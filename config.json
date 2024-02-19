@@ -102,22 +102,18 @@
             "objectType": "struct",
             "accessControl": "internal"
           }
+        },
+        {
+          "destination": "StyleDictionaryColor+.swift",
+          "format": "ios-swift/Color+.swift",
+          "className": "StyleDictionaryColor"
         }
       ]
     },
     "ios-swift-separate-enums": {
       "transformGroup": "ios-swift-separate",
-      "buildPath": "build/ios-swift/",
+      "buildPath": "build/ios-swift-sep/",
       "files": [
-        {
-          "destination": "Color+.swift",
-          "format": "ios-swift/Color+.swift",
-          "filter": {
-            "attributes": {
-              "category": "color"
-            }
-          }
-        },
         {
           "destination": "StyleDictionaryColor.swift",
           "format": "ios-swift/enum.swift",
