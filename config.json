@@ -36,6 +36,10 @@
         {
           "destination": "style_dictionary_dimens.xml",
           "format": "android/dimens"
+        },
+        {
+          "destination": "style_dictionary_colors_original.xml",
+          "format": "android/colors+original"
         }
       ]
     },
