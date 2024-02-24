@@ -38,12 +38,16 @@
           "format": "android/dimens"
         },
         {
-          "destination": "style_dictionary_colors_original.xml",
-          "format": "android/colors+original"
+          "destination": "style_dictionary_colors_plus.xml",
+          "format": "android/colors+"
         },
         {
-          "destination": "style_dictionary_dimens_original.xml",
-          "format": "android/dimens+original"
+          "destination": "style_dictionary_dimens_plus.xml",
+          "format": "android/dimens+"
+        },
+        {
+          "destination": "style_dictionary_font_dimens_plus.xml",
+          "format": "android/font_dimens+"
         }
       ]
     },
@@ -107,6 +111,16 @@
           "destination": "StyleDictionaryColor+.swift",
           "format": "ios-swift/Color+.swift",
           "className": "StyleDictionaryColor"
+        },
+        {
+          "destination": "StyleDictionarySize+.swift",
+          "format": "ios-swift/dimens+",
+          "className": "StyleDictionarySize"
+        },
+        {
+          "destination": "StyleDictionaryFontSize+.swift",
+          "format": "ios-swift/font_dimens+",
+          "className": "StyleDictionarySize"
         }
       ]
     },
