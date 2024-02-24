@@ -1,6 +1,6 @@
 {
   "source": [
-    "tokens/**/*.json"
+    "tokens19-02*/**/*.json"
   ],
   "platforms": {
     "scss": {
@@ -23,6 +23,7 @@
     },
     "android": {
       "transformGroup": "android",
+      "BAKtransforms" : ["attribute/cti", "name/cti/snake", "color/hex", "size/remToSp", "size/pxToDp"],
       "buildPath": "build/android/styledictionary/src/main/res/values/",
       "files": [
         {
@@ -39,15 +40,15 @@
         },
         {
           "destination": "style_dictionary_colors_plus.xml",
-          "format": "android/colors+"
+          "format": "android/Colors+"
         },
         {
           "destination": "style_dictionary_dimens_plus.xml",
-          "format": "android/dimens+"
+          "format": "android/Dimens+"
         },
         {
           "destination": "style_dictionary_font_dimens_plus.xml",
-          "format": "android/font_dimens+"
+          "format": "android/FontDimens+"
         }
       ]
     },
@@ -108,18 +109,18 @@
           }
         },
         {
-          "destination": "StyleDictionaryColor+.swift",
-          "format": "ios-swift/Color+.swift",
+          "destination": "StyleDictionaryColors+.swift",
+          "format": "ios-swift/Colors+",
           "className": "StyleDictionaryColor"
         },
         {
-          "destination": "StyleDictionarySize+.swift",
-          "format": "ios-swift/dimens+",
+          "destination": "StyleDictionarySizes+.swift",
+          "format": "ios-swift/Sizes+",
           "className": "StyleDictionarySize"
         },
         {
-          "destination": "StyleDictionaryFontSize+.swift",
-          "format": "ios-swift/font_dimens+",
+          "destination": "StyleDictionaryFontSizes+.swift",
+          "format": "ios-swift/FontSizes+",
           "className": "StyleDictionarySize"
         }
       ]

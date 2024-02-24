@@ -54,7 +54,7 @@ const fs = require('fs-extra');
 
 // Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
-    name: 'android/colors+',
+    name: 'android/Colors+',
     formatter: ({ dictionary }) => {
 
 
@@ -93,7 +93,7 @@ StyleDictionary.registerFormat({
 
 // Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
-    name: 'android/dimens+',
+    name: 'android/Dimens+',
     formatter: ({ dictionary }) => {
 
 
@@ -123,13 +123,13 @@ StyleDictionary.registerFormat({
 
 // Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
-    name: 'android/font_dimens+',
+    name: 'android/FontDimens+',
     formatter: ({ dictionary }) => {
 
 
         var contents = "";
         dictionary.allProperties
-            .filter(token => token.type === 'fontSizes')
+            .filter(token => token.type === 'fontSizes' || token.type === 'typography')
             .forEach(token => {
                 contents += `<dimens name="${token.name}">${token.value}sp</dimens>\n    `;
             });
@@ -153,7 +153,7 @@ StyleDictionary.registerFormat({
 
 // Generate iOS Enum colors with xcassets.
 StyleDictionary.registerFormat({
-    name: 'ios-swift/Color+.swift',
+    name: 'ios-swift/Colors+',
     formatter: ({ dictionary }) => {
 
         var classContents = "";
@@ -207,7 +207,7 @@ extension ShapeStyle where Self == Color {
 
 // Generate iOS dimens for sizes. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
-    name: 'ios-swift/dimens+',
+    name: 'ios-swift/Sizes+',
     formatter: ({ dictionary }) => {
 
 
@@ -237,13 +237,13 @@ extension Double {
 
 // Generate iOS dimens for sizes. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
-    name: 'ios-swift/font_dimens+',
+    name: 'ios-swift/FontSizes+',
     formatter: ({ dictionary }) => {
 
 
         var classContents = "";
         dictionary.allProperties
-            .filter(token => token.type === 'fontSizes')
+            .filter(token => token.type === 'fontSizes' || token.type === 'typography')
             .forEach(token => {
                 classContents += `static var ${token.name}: Double = ${token.value} \n\t`
             });

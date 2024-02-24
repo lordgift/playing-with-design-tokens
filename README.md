@@ -61,19 +61,37 @@ style-dictionary build
 ---
 ## Customization
 
-I've custom for generate iOS ColorSet.xcassets with source code that reference to assets. It easier than basic style-dictionary to preview colors and easier use in your `View`. And I customized it for SwiftUI already.
+I got many problem with basic generator. I have to customize into my style.
 
-You can build style-dictionary including with expansion by only execute this command.
+- Json token pattern required.
+- Size multiply by 16.
+- I need to generate color in Color Assets.
+
+All above problem can be solved by using following my customize format. You can build style-dictionary including with expansion by only execute this command.
 
 ```bash
 node build.js
 ```
 
-### Generated Output
+Don't forget to check your `config.json`
+
+- android/Colors+
+- android/Dimens+
+- android/FontDimens+
+- ios-swift/Colors+
+- ios-swift/Sizes+
+- ios-swift/FontSizes+
+
+---
+
+`ColorSet.xcassets` is for XCode, you can preview your colors in GUI.
+
+### Generated Output 
 
 ![colorassets-example](https://github.com/lordgift/playing-with-design-tokens/assets/1191403/e6aa4c81-b012-4fdc-9643-817eaaf97f51)
 
 
+I also have an extension for point to ColorAssets for easier to use in your development.
 
 ```swift
 //
@@ -101,3 +119,4 @@ extension ShapeStyle where Self == Color {
 For further customization, if you need to advance customize for support as you wish. You have to implement javascript following with [docs](https://amzn.github.io/style-dictionary/#/formats?id=custom-format-with-output-references).
 
 ---
+
