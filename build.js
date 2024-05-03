@@ -1,55 +1,26 @@
+
+
 const StyleDictionary = require('style-dictionary');
 const fs = require('fs-extra');
 
 
-// StyleDictionary.transform(
-    
-// )
+// 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
+const config = require('./config.json');
 
-// module.exports = {
-//     // matcher: (token) => typeof token.value === "string" && token.value.indexOf("px") !== -1,
-//     transformer: (token, option) => {
-//       // leverage multi-brand multi-platform build file to pass in `option.scale`
-//       token.value = token.value * 0;
-//       console.debug("👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀");
-  
-//       return styleDictionary.transform["android/dimens"].transformer(token, options);
-//     },
-//   };
+function tokensToMultifiles() {
+    config.source.forEach( elm => {
+        let tokens = require(elm);
+        let keys = Object.keys(tokens)
+        keys.forEach( ee => {
+            let file = `myfile/${ee}.json`;
+            fs.ensureFileSync(file);
+            fs.writeJsonSync(file, tokens[ee]);
+        });
+    })
+}
 
-
-// StyleDictionary.registerTransform({
-//     name: 'unitless/dp-sp',
-//     type: 'value',
-//     matcher: function(prop) {
-//         return prop.group === 'typography' || prop.group === 'spacing';
-//     },
-//     transformer: function(prop) {
-//         // in Android font sizes are expressed in "sp" units
-//         let unit = (prop.group === 'typography') ? 'sp' : 'dp';
-//         return `${prop.value}${unit}`;
-//     }
-// });
-
-
-// StyleDictionary.registerTransformGroup({
-//     name: 'custom/android',
-//     // as you can see, here we are completely ignoring the "attribute/cti" transform (it's totally possible),
-//     // because we are relying on custom attributes for the matchers and the custom format for the output
-//     transforms: ["attribute/cti"]
-// });
-
-// StyleDictionary.registerTransform({
-//     name: 'android/ext',
-//     type: 'value',
-//     matcher: function (token) {
-//       return token.attributes.category === 'size';
-//     },
-//     transformer: function (token) {
-//       return token.original.value; //(parseInt(token.original.value) / 1000).toString() + 's';
-//     },
-//   });
-  
+tokensToMultifiles()
+// 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
 
 
 // Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
@@ -264,8 +235,10 @@ extension Double {
 
 
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
-const StyleDictionaryExtended = StyleDictionary.extend(__dirname + '/config.json');
-StyleDictionaryExtended.buildAllPlatforms();
+// StyleDictionary.confi.source = ["myfile/*.json","myfile/*/*.json"]
+StyleDictionary.extend(__dirname + '/config.json').extend({
+    source: ["myfile/*.json","myfile/*/*.json"],
+}).buildAllPlatforms();
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 
 
