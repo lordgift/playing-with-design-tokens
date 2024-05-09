@@ -76,7 +76,8 @@ StyleDictionary.registerFormat({
         dictionary.allProperties
             .filter(token => token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing')
             .forEach(token => {
-                contents += `<dimens name="${token.name}">${token.value}dp</dimens>\n    `;
+                var tokenValue = token.value.replaceAll(/px/g, "");
+                contents += `<dimens name="${token.name}">${tokenValue}dp</dimens>\n    `;
             });
 
 
@@ -104,9 +105,10 @@ StyleDictionary.registerFormat({
 
         var contents = "";
         dictionary.allProperties
-            .filter(token => token.type === 'fontSizes' || token.type === 'typography')
+            .filter(token => token.type === 'fontSizes' )
             .forEach(token => {
-                contents += `<dimens name="${token.name}">${token.value}sp</dimens>\n    `;
+                var tokenValue = token.value.replaceAll(/px/g, "");
+                contents += `<dimens name="${token.name}">${tokenValue}sp</dimens>\n    `;
             });
 
 
@@ -189,7 +191,8 @@ StyleDictionary.registerFormat({
         dictionary.allProperties
             .filter(token => token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing')
             .forEach(token => {
-                classContents += `static var ${token.name}: Double = ${token.value} \n\t`
+                var tokenValue = token.value.replaceAll(/px/g, "");
+                classContents += `static var ${token.name}: Double = ${tokenValue} \n\t`
             });
 
 
@@ -216,9 +219,10 @@ StyleDictionary.registerFormat({
 
         var classContents = "";
         dictionary.allProperties
-            .filter(token => token.type === 'fontSizes' || token.type === 'typography')
+            .filter(token => token.type === 'fontSizes' )
             .forEach(token => {
-                classContents += `static var ${token.name}: Double = ${token.value} \n\t`
+                var tokenValue = token.value.replaceAll(/px/g, "");
+                classContents += `static var ${token.name}: Double = ${tokenValue} \n\t`
             });
 
 
