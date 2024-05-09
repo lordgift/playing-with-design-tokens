@@ -12,14 +12,18 @@ function tokensToMultifiles() {
         let tokens = require(elm);
         let keys = Object.keys(tokens)
         keys.forEach( ee => {
-            let file = `myfile/${ee}.json`;
+            let file = `tokens-multi-files/${ee}.json`;
             fs.ensureFileSync(file);
-            fs.writeJsonSync(file, tokens[ee]);
+            fs.writeJsonSync(file, tokens[ee], {spaces: 4});
         });
     })
 }
 
-tokensToMultifiles()
+process.argv.slice(2).forEach(arg => {
+    if (arg == "-e") {
+        tokensToMultifiles();
+    } 
+})
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
 
 
@@ -235,9 +239,8 @@ extension Double {
 
 
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
-// StyleDictionary.confi.source = ["myfile/*.json","myfile/*/*.json"]
 StyleDictionary.extend(__dirname + '/config.json').extend({
-    source: ["myfile/*.json","myfile/*/*.json"],
+    source: ["tokens-multi-files/**/*.json"],
 }).buildAllPlatforms();
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 
