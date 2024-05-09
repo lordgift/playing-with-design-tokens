@@ -5,18 +5,17 @@ const fs = require('fs-extra');
 
 
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
-const config = require('./config.json');
-
 function tokensToMultifiles() {
-    config.source.forEach( elm => {
-        let tokens = require(elm);
-        let keys = Object.keys(tokens)
-        keys.forEach( ee => {
-            let file = `tokens-multi-files/${ee}.json`;
-            fs.ensureFileSync(file);
-            fs.writeJsonSync(file, tokens[ee], {spaces: 4});
-        });
-    })
+    
+    let source = "/Users/mac/Documents/scgprojects/design-tokens-sync/tokens.json";
+
+    let tokens = require(source);
+    let keys = Object.keys(tokens)
+    keys.forEach( tokenGroup => {
+        let file = `tokens-multi-files/${tokenGroup}.json`;
+        fs.ensureFileSync(file);
+        fs.writeJsonSync(file, tokens[tokenGroup], {spaces: 4});
+    });
 }
 
 process.argv.slice(2).forEach(arg => {
@@ -244,7 +243,7 @@ extension Double {
 
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 StyleDictionary.extend(__dirname + '/config.json').extend({
-    source: ["tokens-multi-files/**/*.json"],
+    source: ["tokens-multi-files/**/*.json"]
 }).buildAllPlatforms();
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 

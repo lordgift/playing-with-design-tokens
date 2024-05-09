@@ -1,7 +1,5 @@
 {
-  "source": [
-    "tokens19-02*/**/*.json"
-  ],
+  
   "platforms": {
     "scss": {
       "transformGroup": "scss",
