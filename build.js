@@ -135,7 +135,7 @@ StyleDictionary.registerFormat({
         var classContents = "";
 
         //Generate xcassets
-        const assetsDir = 'build/ios-swift/ColorSet.xcassets';
+        const assetsDir = 'build/ios-swift/StyleDictionaryColorSet.xcassets';
         dictionary.allProperties
             .filter(token => token.type === 'color')
             .forEach(token => {
