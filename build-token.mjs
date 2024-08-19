@@ -34,19 +34,42 @@ StyleDictionary.registerFormat({
 
         // console.debug(dictionary);
 
+        // console.error(rgba2argbHex("rgba(255, 255, 255, 0.08)"));
+        // console.error(hex("0.08"));
+
         var contents = "";
         dictionary.allTokens
             .filter(token => token.type === 'color')
             .forEach(token => {
 
+                let tokenName = token.name
                 let tokenValue = token.value
+
+                // tokenValue is hex e.g.#112233
                 if (tokenValue.startsWith("#")) {
                     contents += `<color name="${token.name}">${tokenValue}</color>\n    `;
                 }
+
                 // tokenValue is rgba e.g.rgba(255, 255, 255, 0.08)
-                else if (tokenValue.startsWith("rgba")) {
-                    contents += `<color name="${token.name}">#${rgba2hex(tokenValue)}</color>\n    `;
+                else if (tokenValue.match(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(.+)\)/g)) {
+                    contents += `<color name="${token.name}">#${rgba2argbHex(tokenValue)}</color>\n    `;
                 }
+                
+                // tokenValue is FUCKING RGBA e.g.rgba( #ff020202, 0.32)
+                else if (tokenValue.startsWith("rgba") && tokenValue.includes("#")) {
+                    let alpha = tokenValue.replace(/rgba\(\s?#(.{2})(.{2})(.{2})(.{2}),\s?(.+)\)/g, `$5`); 
+                    let hexAlpha = hex(alpha)
+                    let hexRGB = tokenValue.replace(/rgba\(\s?#(.{2})(.{2})(.{2})(.{2}),\s?(.+)\)/g, `$2$3$4`);
+
+                    contents += `<color name="${token.name}">#${hexAlpha + hexRGB}</color>\n    `;
+                } 
+                
+                else {
+                    console.error(`Mismatch pattern for token ${tokenName} = ${tokenValue}`);
+                }
+
+
+
             });
 
 
@@ -294,15 +317,29 @@ function extractToComponents(token) {
         } 
 
         // tokenValue is rgba e.g.rgba(41, 51, 43, 0.12)
-        else if (tokenValue.match(/rgba\((\d+),\W?(\d+),\W?(\d+),\W?(\d+.\d+)\)/g)) {
-            var jsonRGBA = tokenValue.replace(/rgba\((\d+),\W?(\d+),\W?(\d+),\W?(\d+.\d+)\)/g, `{"red": "$1", "blue": "$2", "green": "$3", "alpha": "$4"}`); 
+        else if (tokenValue.match(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(.+)\)/g)) {
+            var jsonRGBA = tokenValue.replace(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(.+)\)/g, `{"red": "$1", "blue": "$2", "green": "$3", "alpha": "$4"}`); 
             jsonComponents = JSON.parse(jsonRGBA); 
 /* 
   "components": {
     "red": "41",
-    "green": "51",
-    "blue": "43",
+    "blue": "51",
+    "green": "43",
     "alpha": "0.12"
+   }
+*/
+        } 
+
+        // tokenValue is FUCKING RGBA e.g.rgba( UIColor(red: 0.004, green: 0.275, blue: 0.447, alpha: 1), 0.16)
+        else if (tokenValue.startsWith("rgba") && tokenValue.includes("UIColor")) {
+            var jsonRGBA = tokenValue.replace(/rgba\(\s?UIColor\(red:\s?(.+),\s?green:\s?(.+),\s?blue:\s?(.+),\s?alpha:\s?(.+)\),\s?(.+)\)/g, `{"red": "$1", "blue": "$3", "green": "$2", "alpha": "$5"}`); 
+            jsonComponents = JSON.parse(jsonRGBA); 
+/* 
+  "components": {
+    "red": "0.004",
+    "blue": "0.447",
+    "green": "0.275",
+    "alpha": "0.16"
    }
 */
         } 
@@ -319,8 +356,8 @@ function extractToComponents(token) {
     
 }
 
-//rgba(0, 0, 0, 0.74) => 000000bc
-function rgba2hex(orig) {
+//rgba(0, 0, 0, 0.74) => bc000000
+function rgba2argbHex(orig) {
     var a, isPercent,
         rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+),?([^,\s)]+)?/i),
         alpha = (rgb && rgb[4] || "").trim(),
@@ -336,7 +373,12 @@ function rgba2hex(orig) {
     }
     // multiply before convert to HEX
     a = ((a * 255) | 1 << 8).toString(16).slice(1)
-    hex = hex + a;
+    hex = a + hex;
 
     return hex;
+}
+
+function hex(floatingPoint) {    
+    var hex2digit = ((floatingPoint * 255) | 1 << 8).toString(16).slice(1)
+    return hex2digit;
 }
