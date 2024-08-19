@@ -1,20 +1,21 @@
+// import { createRequire } from 'node:module';
+// const require = createRequire(import.meta.url);
 
+// const StyleDictionary = require('style-dictionary');
+// const fs = require('fs-extra');
 
-const StyleDictionary = require('style-dictionary');
-const fs = require('fs-extra');
+import StyleDictionary from 'style-dictionary';
+import fs from 'fs-extra';
 
+import designTokenJson from '/Users/gift/Documents/scgprojects/design-tokens-sync/tokens.json' assert { type: "json" };;
 
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
 function tokensToMultifiles() {
-    
-    let source = "/Users/mac/Documents/scgprojects/design-tokens-sync/tokens.json";
-
-    let tokens = require(source);
-    let keys = Object.keys(tokens)
+    let keys = Object.keys(designTokenJson);
     keys.forEach( tokenGroup => {
         let file = `tokens-multi-files/${tokenGroup}.json`;
         fs.ensureFileSync(file);
-        fs.writeJsonSync(file, tokens[tokenGroup], {spaces: 4});
+        fs.writeJsonSync(file, designTokenJson[tokenGroup], {spaces: 4});
     });
 }
 
@@ -29,11 +30,12 @@ process.argv.slice(2).forEach(arg => {
 // Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'android/Colors+',
-    formatter: ({ dictionary }) => {
+    format: ({ dictionary }) => {
 
+        // console.debug(dictionary);
 
         var contents = "";
-        dictionary.allProperties
+        dictionary.allTokens
             .filter(token => token.type === 'color')
             .forEach(token => {
 
@@ -68,11 +70,11 @@ StyleDictionary.registerFormat({
 // Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'android/Dimens+',
-    formatter: ({ dictionary }) => {
+    format: ({ dictionary }) => {
 
 
         var contents = "";
-        dictionary.allProperties
+        dictionary.allTokens
             .filter(token => token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing')
             .forEach(token => {
                 var tokenValue = token.value.replaceAll(/px/g, "");
@@ -99,11 +101,11 @@ StyleDictionary.registerFormat({
 // Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'android/FontDimens+',
-    formatter: ({ dictionary }) => {
+    format: ({ dictionary }) => {
 
 
         var contents = "";
-        dictionary.allProperties
+        dictionary.allTokens
             .filter(token => token.type === 'fontSizes' )
             .forEach(token => {
                 var tokenValue = token.value.replaceAll(/px/g, "");
@@ -130,13 +132,13 @@ StyleDictionary.registerFormat({
 // Generate iOS Enum colors with xcassets.
 StyleDictionary.registerFormat({
     name: 'ios-swift/Colors+',
-    formatter: ({ dictionary }) => {
+    format: ({ dictionary }) => {
 
         var classContents = "";
 
         //Generate xcassets
         const assetsDir = 'build/ios-swift/StyleDictionaryColorSet.xcassets';
-        dictionary.allProperties
+        dictionary.allTokens
             .filter(token => token.type === 'color')
             .forEach(token => {
 
@@ -181,13 +183,14 @@ extension ShapeStyle where Self == Color {
 
 
 // Generate iOS dimens for sizes. (for avoid unknown 16 multiplication ??)
+StyleDictionary.registerFormat
 StyleDictionary.registerFormat({
     name: 'ios-swift/Sizes+',
-    formatter: ({ dictionary }) => {
+    format: ({ dictionary }) => {
 
 
         var classContents = "";
-        dictionary.allProperties
+        dictionary.allTokens
             .filter(token => token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing')
             .forEach(token => {
                 var tokenValue = token.value.replaceAll(/px/g, "");
@@ -213,11 +216,11 @@ extension Double {
 // Generate iOS dimens for sizes. (for avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'ios-swift/FontSizes+',
-    formatter: ({ dictionary }) => {
+    format: ({ dictionary }) => {
 
 
         var classContents = "";
-        dictionary.allProperties
+        dictionary.allTokens
             .filter(token => token.type === 'fontSizes' )
             .forEach(token => {
                 var tokenValue = token.value.replaceAll(/px/g, "");
@@ -242,9 +245,15 @@ extension Double {
 
 
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
-StyleDictionary.extend(__dirname + '/config.json').extend({
+const sd = new StyleDictionary('./config.json');
+await sd.hasInitialized;
+
+const sdExtended = await sd.extend({
     source: ["tokens-multi-files/**/*.json"]
-}).buildAllPlatforms();
+});
+
+await sdExtended.cleanAllPlatforms();
+await sdExtended.buildAllPlatforms();
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 
 
@@ -323,7 +332,7 @@ function rgba2hex(orig) {
     if (alpha !== "") {
         a = alpha;
     } else {
-        a = 01;
+        a = "01";
     }
     // multiply before convert to HEX
     a = ((a * 255) | 1 << 8).toString(16).slice(1)
