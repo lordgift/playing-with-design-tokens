@@ -1,9 +1,3 @@
-// import { createRequire } from 'node:module';
-// const require = createRequire(import.meta.url);
-
-// const StyleDictionary = require('style-dictionary');
-// const fs = require('fs-extra');
-
 import StyleDictionary from 'style-dictionary';
 import fs from 'fs-extra';
 
