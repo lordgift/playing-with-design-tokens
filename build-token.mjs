@@ -263,6 +263,7 @@ function extractToComponents(tokenValue) {
         // console.debug(tokenValue);
 
         var jsonComponents = "";
+        // console.warn(`❌ ${tokenValue}`);
 
         // tokenValue is hex e.g.#112233
         if (tokenValue.startsWith("#")) {
@@ -294,7 +295,7 @@ function extractToComponents(tokenValue) {
         } 
 
         // tokenValue is rgba e.g.rgba(41, 51, 43, 0.12)
-        else if (tokenValue.startsWith("rgba")) {
+        else if (tokenValue.match(/rgba\((\d+),\W?(\d+),\W?(\d+),\W?(\d+.\d+)\)/g)) {
             var jsonRGBA = tokenValue.replace(/rgba\((\d+),\W?(\d+),\W?(\d+),\W?(\d+.\d+)\)/g, `{"red": "$1", "blue": "$2", "green": "$3", "alpha": "$4"}`); 
             jsonComponents = JSON.parse(jsonRGBA); 
 /* 
