@@ -151,7 +151,7 @@ StyleDictionary.registerFormat({
                         {
                             "color" : {
                                 'color-space': "srgb",
-                                components: extractToComponents(token.value)
+                                components: extractToComponents(token)
                             },
                             idiom: "universal"
                         }
@@ -257,13 +257,12 @@ await sdExtended.buildAllPlatforms();
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 
 
-function extractToComponents(tokenValue) {
-    try {
-        
-        // console.debug(tokenValue);
+function extractToComponents(token) {
+    let tokenName = token.name;
+    let tokenValue = token.value;
 
+    try {
         var jsonComponents = "";
-        // console.warn(`❌ ${tokenValue}`);
 
         // tokenValue is hex e.g.#112233
         if (tokenValue.startsWith("#")) {
@@ -309,7 +308,7 @@ function extractToComponents(tokenValue) {
         } 
 
         else {
-            console.error(`Mismatch pattern for tokenValue = ${tokenValue}`);
+            console.error(`Mismatch pattern for token ${tokenName} = ${tokenValue}`);
         }
         
         return jsonComponents;
