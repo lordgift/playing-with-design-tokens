@@ -13,11 +13,21 @@ function tokensToMultifiles() {
     });
 }
 
-process.argv.slice(2).forEach(arg => {
-    if (arg == "-e") {
+if (process.argv.length < 3) {
+    console.info(`\x1b[1;31mExtraction mode disabled.`);
+} else {
+    process.argv.filter(arg => arg == "-e" || arg == "--extract" ).forEach( aa => {
+        console.info(`\x1b[1;32mExtraction mode enabled.`);
         tokensToMultifiles();
-    } 
-})
+    });
+
+    process.argv.filter(arg => arg == "-h" || arg == "--help" ).forEach( aa => {
+        console.info(`\x1b[0m\t -e, --extract \tto enable extraction mode.
+             \t\tfor extract single json file that exported from Token Studio into directory-based.`);
+        console.info(`\x1b[0m\t -h, --help \tprint command line options.`);
+        process.exit(0);
+    });
+}
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
 
 
@@ -26,27 +36,33 @@ StyleDictionary.registerFormat({
     name: 'android/Colors+',
     format: ({ dictionary }) => {
 
+        console.info("\x1b[0m\nformatting 'android/Colors+'...");
         // console.debug(dictionary);
 
         // console.error(rgba2argbHex("rgba(255, 255, 255, 0.08)"));
         // console.error(hex("0.08"));
 
         var contents = "";
+        let newline = "\n\t";
         dictionary.allTokens
             .filter(token => token.type === 'color')
             .forEach(token => {
 
-                let tokenName = token.name
-                let tokenValue = token.value
-
+                let tokenName = token.name;
+                let tokenValue = token.value;
+                
                 // tokenValue is hex e.g.#112233
                 if (tokenValue.startsWith("#")) {
-                    contents += `<color name="${token.name}">${tokenValue}</color>\n    `;
+                    let lineOfCode = `<color name="${tokenName}">${tokenValue}</color>`;
+                    contents += lineOfCode + newline;
+                    console.info(`\x1b[1;33mappending case 1: ${tokenName}: \x1b[1;37m${tokenValue} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
                 }
 
                 // tokenValue is rgba e.g.rgba(255, 255, 255, 0.08)
                 else if (tokenValue.match(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(.+)\)/g)) {
-                    contents += `<color name="${token.name}">#${rgba2argbHex(tokenValue)}</color>\n    `;
+                    let lineOfCode = `<color name="${tokenName}">#${rgba2argbHex(tokenValue)}</color>`;
+                    contents += lineOfCode + newline;
+                    console.info(`\x1b[1;33mappending case 2: ${tokenName}: \x1b[1;37m${tokenValue} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
                 }
                 
                 // tokenValue is FUCKING RGBA e.g.rgba( #ff020202, 0.32)
@@ -55,14 +71,14 @@ StyleDictionary.registerFormat({
                     let hexAlpha = hex(alpha)
                     let hexRGB = tokenValue.replace(/rgba\(\s?#(.{2})(.{2})(.{2})(.{2}),\s?(.+)\)/g, `$2$3$4`);
 
-                    contents += `<color name="${token.name}">#${hexAlpha + hexRGB}</color>\n    `;
+                    let lineOfCode = `<color name="${tokenName}">#${hexAlpha + hexRGB}</color>`;
+                    contents += lineOfCode + newline;
+                    console.info(`\x1b[1;33mappending case 3: ${tokenName}: \x1b[1;37m${tokenValue} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
                 } 
                 
                 else {
                     console.error(`Mismatch pattern for token ${tokenName} = ${tokenValue}`);
                 }
-
-
 
             });
 
@@ -89,13 +105,17 @@ StyleDictionary.registerFormat({
     name: 'android/Dimens+',
     format: ({ dictionary }) => {
 
+        console.info("\x1b[0m\nformatting 'android/Dimens+'...");
 
         var contents = "";
+        let newline = "\n\t";
         dictionary.allTokens
             .filter(token => token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing')
             .forEach(token => {
-                var tokenValue = token.value.replaceAll(/px/g, "");
-                contents += `<dimens name="${token.name}">${tokenValue}dp</dimens>\n    `;
+                let tokenValueNoUnit = token.value.replaceAll(/(px|dp)/g, "");
+                let lineOfCode = `<dimens name="${token.name}">${tokenValueNoUnit}dp</dimens>`;
+                contents += lineOfCode + newline;
+                console.info(`\x1b[1;33mappending: ${token.name}: \x1b[1;37m${token.value} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
             });
 
 
@@ -120,13 +140,17 @@ StyleDictionary.registerFormat({
     name: 'android/FontDimens+',
     format: ({ dictionary }) => {
 
+        console.info("\x1b[0m\nformatting 'android/FontDimens+'...");
 
         var contents = "";
+        let newline = "\n\t";
         dictionary.allTokens
             .filter(token => token.type === 'fontSizes' )
             .forEach(token => {
-                var tokenValue = token.value.replaceAll(/px/g, "");
-                contents += `<dimens name="${token.name}">${tokenValue}sp</dimens>\n    `;
+                let tokenValueNoUnit = token.value.replaceAll(/(px|dp)/g, "");
+                let lineOfCode = `<dimens name="${token.name}">${tokenValueNoUnit}sp</dimens>`;
+                contents += lineOfCode + newline;
+                console.info(`\x1b[1;33mappending: ${token.name}: \x1b[1;37m${token.value} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
             });
 
 
@@ -151,15 +175,16 @@ StyleDictionary.registerFormat({
     name: 'ios-swift/Colors+',
     format: ({ dictionary }) => {
 
-        var classContents = "";
+        console.info("\x1b[0m\nformatting 'ios-swift/Colors+'...");
 
+        var classContents = "";
         //Generate xcassets
         const assetsDir = 'build/ios-swift/StyleDictionaryColorSet.xcassets';
         dictionary.allTokens
             .filter(token => token.type === 'color')
             .forEach(token => {
 
-                // console.log(token);
+                // console.info(token);
 
                 const folder = `${assetsDir}/${token.name}.colorset`;
                 const file = `${folder}/Contents.json`;
@@ -179,9 +204,8 @@ StyleDictionary.registerFormat({
                 // create the Contents.json file
                 fs.writeFileSync(file, JSON.stringify(contents, null, 2));
 
-                console.warn(`\x1b[1;33m✔︎ ${file}`);
-
                 classContents += `static var ${token.name}: Color { Color("${token.name}")}\n\t`
+                console.info(`\x1b[1;33m✔︎ ${file}`);
             });
         return `//
 //  Customized based-on StyleDictionary
@@ -205,13 +229,17 @@ StyleDictionary.registerFormat({
     name: 'ios-swift/Sizes+',
     format: ({ dictionary }) => {
 
+        console.info("\x1b[0m\nformatting 'ios-swift/Sizes+'...");
 
         var classContents = "";
+        let newline = "\n\t"
         dictionary.allTokens
             .filter(token => token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing')
             .forEach(token => {
-                var tokenValue = token.value.replaceAll(/px/g, "");
-                classContents += `static var ${token.name}: Double = ${tokenValue} \n\t`
+                var tokenValueNoUnit = token.value.replaceAll(/px/g, "");
+                let lineOfCode = `static var ${token.name}: Double = ${tokenValueNoUnit}`
+                classContents += lineOfCode + newline
+                console.info(`\x1b[1;33mappending: ${token.name}: \x1b[1;37m${token.value} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
             });
 
 
@@ -235,13 +263,17 @@ StyleDictionary.registerFormat({
     name: 'ios-swift/FontSizes+',
     format: ({ dictionary }) => {
 
+        console.info("\x1b[0m\nformatting 'ios-swift/FontSizes+'...");
 
         var classContents = "";
+        let newline = "\n\t"
         dictionary.allTokens
             .filter(token => token.type === 'fontSizes' )
             .forEach(token => {
                 var tokenValue = token.value.replaceAll(/px/g, "");
-                classContents += `static var ${token.name}: Double = ${tokenValue} \n\t`
+                let lineOfCode = `static var ${token.name}: Double = ${tokenValue}`
+                classContents += lineOfCode + newline
+                console.info(`\x1b[1;33mappending: ${token.name}: \x1b[1;37m${token.value} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
             });
 
 
@@ -262,6 +294,9 @@ extension Double {
 
 
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
+
+console.info(`\x1b[0m🔥 Generating you Design Token (*.json) into usable source code........`);
+
 const sd = new StyleDictionary('./config.json');
 await sd.hasInitialized;
 
@@ -285,6 +320,7 @@ function extractToComponents(token) {
         if (tokenValue.startsWith("#")) {
             var crappyJSON = `{ "alpha" : "1.000", "red" : "0x${tokenValue.substring(1,3)}", "green" : "0x${tokenValue.substring(3,5)}", "blue" : "0x${tokenValue.substring(5,7)}" }`; 
             jsonComponents = JSON.parse(crappyJSON); 
+            console.info(`\x1b[1;33mgenerating case 1: ${tokenName}: \x1b[1;37m${tokenValue} \x1b[1;33minto \x1b[1;37m${crappyJSON}`);
 /* 
   "components": {
     "alpha": "1.000",
@@ -300,6 +336,7 @@ function extractToComponents(token) {
             var cleaupSwift = tokenValue.replace(/UIColor\(/, "{").replace(/\)/, "}")
             var appendedQuot = cleaupSwift.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2": '); 
             jsonComponents = JSON.parse(appendedQuot); 
+            console.info(`\x1b[1;33mgenerating case 2: ${tokenName}: \x1b[1;37m${tokenValue} \x1b[1;33minto \x1b[1;37m${appendedQuot}`);
 /* 
   "components": {
     "red": 0.823,
@@ -314,6 +351,7 @@ function extractToComponents(token) {
         else if (tokenValue.match(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(.+)\)/g)) {
             var jsonRGBA = tokenValue.replace(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(.+)\)/g, `{"red": "$1", "blue": "$2", "green": "$3", "alpha": "$4"}`); 
             jsonComponents = JSON.parse(jsonRGBA); 
+            console.info(`\x1b[1;33mgenerating case 3: ${tokenName}: \x1b[1;37m${tokenValue} \x1b[1;33minto \x1b[1;37m${jsonRGBA}`);
 /* 
   "components": {
     "red": "41",
@@ -328,6 +366,7 @@ function extractToComponents(token) {
         else if (tokenValue.startsWith("rgba") && tokenValue.includes("UIColor")) {
             var jsonRGBA = tokenValue.replace(/rgba\(\s?UIColor\(red:\s?(.+),\s?green:\s?(.+),\s?blue:\s?(.+),\s?alpha:\s?(.+)\),\s?(.+)\)/g, `{"red": "$1", "blue": "$3", "green": "$2", "alpha": "$5"}`); 
             jsonComponents = JSON.parse(jsonRGBA); 
+            console.info(`\x1b[1;33mgenerating case 4: ${tokenName}: \x1b[1;37m${tokenValue} \x1b[1;33minto \x1b[1;37m${jsonRGBA}`);
 /* 
   "components": {
     "red": "0.004",
