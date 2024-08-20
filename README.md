@@ -1,6 +1,13 @@
 # playing-with-design-tokens
 Try to use design tokens from designer then generate for development.
 
+---
+## MIGRATION COMPLETE ✈️
+
+As [style-dictionary v4](https://v4.styledictionary.com/) was release in Aug 2024, it's required ES Module instead of CommonJS.
+Now this project already support. 
+
+---
 
 This example code initialize from style-dictionary basic. I focus to use on iOS, Android development. If you have the style-dictionary module installed globally, you can `cd` into this directory and run:
 ```bash
