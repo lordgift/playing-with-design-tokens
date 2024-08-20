@@ -70,7 +70,7 @@ I got many problem with basic generator. I have to customize into my style.
 All above problem can be solved by using following my customize format. You can build style-dictionary including with expansion by only execute this command.
 
 ```bash
-node build.js
+node build-token.js
 ```
 
 Don't forget to check your `config.json`
