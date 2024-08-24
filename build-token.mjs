@@ -176,10 +176,12 @@ StyleDictionary.registerFormat({
     format: ({ dictionary }) => {
 
         console.info("\x1b[0m\nformatting 'ios-swift/Colors+'...");
-
         var classContents = "";
+
+        const buildPath = sd.options.platforms["ios-swift"].buildPath
         //Generate xcassets
-        const assetsDir = 'build/ios-swift/StyleDictionaryColorSet.xcassets';
+        const assetsDir = `${buildPath}StyleDictionaryColorSet.xcassets`;
+
         dictionary.allTokens
             .filter(token => token.type === 'color')
             .forEach(token => {
@@ -224,7 +226,6 @@ extension ShapeStyle where Self == Color {
 
 
 // Generate iOS dimens for sizes. (for avoid unknown 16 multiplication ??)
-StyleDictionary.registerFormat
 StyleDictionary.registerFormat({
     name: 'ios-swift/Sizes+',
     format: ({ dictionary }) => {
