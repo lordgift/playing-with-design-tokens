@@ -1,7 +1,7 @@
 import StyleDictionary from 'style-dictionary';
 import fs from 'fs-extra';
 
-import designTokenJson from '/Users/gift/Documents/scgprojects/design-tokens-sync/tokens.json' assert { type: "json" };;
+import designTokenJson from './../design-tokens-sync/tokens.json' assert { type: "json" };;
 
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
 function tokensToMultifiles() {
@@ -295,7 +295,6 @@ extension Double {
 
 
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
-
 console.info(`\x1b[0m🔥 Generating you Design Token (*.json) into usable source code........`);
 
 const sd = new StyleDictionary('./config.json');
@@ -305,7 +304,6 @@ const sdExtended = await sd.extend({
     source: ["tokens-multi-files/**/*.json"]
 });
 
-await sdExtended.cleanAllPlatforms();
 await sdExtended.buildAllPlatforms();
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 
