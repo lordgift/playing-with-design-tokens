@@ -1,13 +1,15 @@
 import StyleDictionary from 'style-dictionary';
 import fs from 'fs-extra';
 
-import designTokenJson from './../design-tokens-sync/tokens.json' assert { type: "json" };;
-
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
 function tokensToMultifiles() {
+
+    // TODO: Specify tokens.json that exported from Token Studio.
+    const designTokenJson = fs.readJSONSync("./../design-tokens-sync/tokens.json");
+
     let keys = Object.keys(designTokenJson);
     keys.forEach( tokenGroup => {
-        let file = `tokens-multi-files/${tokenGroup}.json`;
+        let file = `tokens-extracted-files/${tokenGroup}.json`;
         fs.ensureFileSync(file);
         fs.writeJsonSync(file, designTokenJson[tokenGroup], {spaces: 4});
     });
@@ -15,6 +17,14 @@ function tokensToMultifiles() {
 
 if (process.argv.length < 3) {
     console.info(`\x1b[1;31mExtraction mode disabled.`);
+    try {
+        fs.readdirSync("./tokens-extracted-files");
+        console.info(`\x1b[0;32mDirectory /tokens-extracted-files was found. continue generate source code.`);
+    } catch {
+        console.info(`\x1b[0;31mNo token found. You must place multi-files token (**.json) that were exported from Token Studio in directory '/tokens-extracted-files'`);
+        process.exit(0);
+    }
+
 } else {
     process.argv.filter(arg => arg == "-e" || arg == "--extract" ).forEach( aa => {
         console.info(`\x1b[1;32mExtraction mode enabled.`);
@@ -31,7 +41,7 @@ if (process.argv.length < 3) {
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
 
 
-// Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
+// Generate Android colors.xml
 StyleDictionary.registerFormat({
     name: 'android/Colors+',
     format: ({ dictionary }) => {
@@ -100,7 +110,7 @@ StyleDictionary.registerFormat({
 
 
 
-// Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
+// Generate Android dimens for sizes in dp unit. (avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'android/Dimens+',
     format: ({ dictionary }) => {
@@ -135,7 +145,7 @@ StyleDictionary.registerFormat({
 });
 
 
-// Generate Android dimens for sizes in dp unit. (for avoid unknown 16 multiplication ??)
+// Generate Android font dimens for sizes in sp unit. (avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'android/FontDimens+',
     format: ({ dictionary }) => {
@@ -225,7 +235,7 @@ extension ShapeStyle where Self == Color {
 });
 
 
-// Generate iOS dimens for sizes. (for avoid unknown 16 multiplication ??)
+// Generate iOS dimens for sizes. (avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'ios-swift/Sizes+',
     format: ({ dictionary }) => {
@@ -259,7 +269,7 @@ extension Double {
     }
 });
 
-// Generate iOS dimens for sizes. (for avoid unknown 16 multiplication ??)
+// Generate iOS font dimens for sizes. (avoid unknown 16 multiplication ??)
 StyleDictionary.registerFormat({
     name: 'ios-swift/FontSizes+',
     format: ({ dictionary }) => {
@@ -301,7 +311,8 @@ const sd = new StyleDictionary('./config.json');
 await sd.hasInitialized;
 
 const sdExtended = await sd.extend({
-    source: ["tokens-multi-files/**/*.json"]
+    // there are the real source for style-dictionary 
+    source: ["tokens-extracted-files/**/*.json"] 
 });
 
 await sdExtended.buildAllPlatforms();
