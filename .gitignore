@@ -2,5 +2,5 @@
 package-lock.json
 
 /build
-/tokens-multi-files
+/tokens-extracted-files
 **.DS_Store
