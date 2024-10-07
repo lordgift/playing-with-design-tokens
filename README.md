@@ -119,6 +119,10 @@ extension ShapeStyle where Self == Color {
 }
 ```
 
+On Xcode 16, you can omit this extension by use XCAssets ability.
+_File Inspector > Asset Catalog > Asset Symbols > Extension On_
+
+
 ---
 
 For further customization, if you need to advance customize for support as you wish. You have to implement javascript following with [docs](https://amzn.github.io/style-dictionary/#/formats?id=custom-format-with-output-references).
