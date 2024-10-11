@@ -42,10 +42,6 @@ if (process.argv.length < 3) {
 
 
 
-let tokenGroupFiltering = ["mode", "comp"];
-
-
-
 // Generate Android colors.xml
 StyleDictionary.registerFormat({
     name: 'android/Colors+',
@@ -60,7 +56,7 @@ StyleDictionary.registerFormat({
         var contents = "";
         let newline = "\n\t";
         dictionary.allTokens
-            .filter(token => canUseToken(token) && token.type === 'color')
+            .filter(token => isInFilterGroup(token) && token.type === 'color')
             .forEach(token => {
 
                 let tokenName = token.name;
@@ -125,7 +121,7 @@ StyleDictionary.registerFormat({
         var contents = "";
         let newline = "\n\t";
         dictionary.allTokens
-            .filter(token => canUseToken(token) && (token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing'))
+            .filter(token => isInFilterGroup(token) && (token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing'))
             .forEach(token => {
                 let tokenValueNoUnit = token.value.replaceAll(/(px|dp)/g, "");
                 let lineOfCode = `<dimens name="${token.name}">${tokenValueNoUnit}dp</dimens>`;
@@ -160,7 +156,7 @@ StyleDictionary.registerFormat({
         var contents = "";
         let newline = "\n\t";
         dictionary.allTokens
-            .filter(token => canUseToken(token) && token.type === 'fontSizes' )
+            .filter(token => isInFilterGroup(token) && token.type === 'fontSizes' )
             .forEach(token => {
                 let tokenValueNoUnit = token.value.replaceAll(/(px|dp)/g, "");
                 let lineOfCode = `<dimens name="${token.name}">${tokenValueNoUnit}sp</dimens>`;
@@ -198,7 +194,7 @@ StyleDictionary.registerFormat({
         const assetsDir = `${buildPath}StyleDictionaryColorSet.xcassets`;
 
         dictionary.allTokens
-            .filter(token => canUseToken(token) && token.type === 'color')
+            .filter(token => isInFilterGroup(token) && token.type === 'color')
             .forEach(token => {
 
                 // console.info(token);
@@ -250,7 +246,7 @@ StyleDictionary.registerFormat({
         var classContents = "";
         let newline = "\n\t"
         dictionary.allTokens
-            .filter(token => canUseToken(token) && (token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing'))
+            .filter(token => isInFilterGroup(token) && (token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing'))
             .forEach(token => {
                 var tokenValueNoUnit = token.value.replaceAll(/px/g, "");
                 let lineOfCode = `static var ${token.name}: Double = ${tokenValueNoUnit}`
@@ -284,7 +280,7 @@ StyleDictionary.registerFormat({
         var classContents = "";
         let newline = "\n\t"
         dictionary.allTokens
-            .filter(token => canUseToken(token) && token.type === 'fontSizes' )
+            .filter(token => isInFilterGroup(token) && token.type === 'fontSizes' )
             .forEach(token => {
                 var tokenValue = token.value.replaceAll(/px/g, "");
                 let lineOfCode = `static var ${token.name}: Double = ${tokenValue}`
@@ -431,9 +427,10 @@ function hex(floatingPoint) {
     return hex2digit;
 }
 
-function canUseToken(token) {
+function isInFilterGroup(token) {
+    let filterGroup = ["mode", "comp"];
     var isContains = false
-    tokenGroupFiltering.forEach( path => {
+    filterGroup.forEach( path => {
         isContains = isContains || token.path.includes(path)
     });
     return isContains;
