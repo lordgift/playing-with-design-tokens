@@ -343,15 +343,16 @@ const sdExtended = await sd.extend({
 
 await sdExtended.buildAllPlatforms();
 
+console.log("\n---------------------------------------------------------------\n");
 
 fs.copy('./build/android', outputForAndroid, (err) => {
     if (err) console.error(err);
-    console.log('File was copied to destination (Android)');
+    console.log('\x1b[1;33m✔︎ File was copied to destination (Android)');
 });
 
 fs.copy('./build/ios-swift', outputForIos, (err) => {
     if (err) console.error(err);
-    console.log('File was copied to destination (iOS)');
+    console.log('\x1b[1;33m✔︎ File was copied to destination (iOS)');
 });
 
 
