@@ -149,7 +149,7 @@ StyleDictionary.registerFormat({
             .filter(token => isInFilterGroup(token) && (token.type === 'sizing' || token.type === 'borderRadius' || token.type === 'spacing'))
             .forEach(token => {
                 let tokenValueNoUnit = token.value.replaceAll(/(px|dp)/g, "");
-                let lineOfCode = `<dimens name="${token.name}">${tokenValueNoUnit}dp</dimens>`;
+                let lineOfCode = `<dimen name="${token.name}">${tokenValueNoUnit}dp</dimen>`;
                 contents += lineOfCode + newline;
                 console.info(`\x1b[1;33mappending: ${token.name}: \x1b[1;37m${token.value} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
             });
@@ -184,7 +184,7 @@ StyleDictionary.registerFormat({
             .filter(token => isInFilterGroup(token) && token.type === 'fontSizes' )
             .forEach(token => {
                 let tokenValueNoUnit = token.value.replaceAll(/(px|dp)/g, "");
-                let lineOfCode = `<dimens name="${token.name}">${tokenValueNoUnit}sp</dimens>`;
+                let lineOfCode = `<dimen name="${token.name}">${tokenValueNoUnit}sp</dimen>`;
                 contents += lineOfCode + newline;
                 console.info(`\x1b[1;33mappending: ${token.name}: \x1b[1;37m${token.value} \x1b[1;33minto \x1b[1;37m${lineOfCode}`);
             });
