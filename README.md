@@ -78,6 +78,19 @@ All above problem can be solved by using following my customize format. You can 
 node build-token.mjs
 ```
 
+
+If you got JSON token in single files, extraction mode may require.
+```bash
+node build-token.mjs -e 
+```
+
+
+You can easy copy all generated files into your project directory with `-oi` and `-oa`
+```bash
+node build-token.mjs -e -oi '/Users/lordgift/Documents/my-ios-project/StyleDictionary' -oa '/Users/lordgift/Documents/my-android-project'
+```
+
+
 Don't forget to check your `config.json`
 
 - android/Colors+

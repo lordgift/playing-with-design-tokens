@@ -22,7 +22,7 @@
     "android": {
       "transformGroup": "android",
       "BAKtransforms" : ["attribute/cti", "name/cti/snake", "color/hex", "size/remToSp", "size/pxToDp"],
-      "buildPath": "build/android/styledictionary/src/main/res/values/",
+      "buildPath": "build/android/app/src/main/res/values/",
       "files": [
         {
           "destination": "style_dictionary_colors_plus.xml",

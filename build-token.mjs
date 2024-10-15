@@ -15,6 +15,9 @@ function tokensToMultifiles() {
     });
 }
 
+
+var outputForAndroid = "";
+var outputForIos = "";
 if (process.argv.length < 3) {
     console.info(`\x1b[1;31mExtraction mode disabled.`);
     try {
@@ -26,16 +29,38 @@ if (process.argv.length < 3) {
     }
 
 } else {
-    process.argv.filter(arg => arg == "-e" || arg == "--extract" ).forEach( aa => {
-        console.info(`\x1b[1;32mExtraction mode enabled.`);
-        tokensToMultifiles();
-    });
+    process.argv.forEach( (v,i) => {
+        if (v == "-h" || v == "--help") {
+            console.info(`\x1b[0m\t -e, --extract \t\tto enable extraction mode.
+                \t\t\tfor extract single json file that exported from Token Studio into directory-based.`);
+            console.info(`\x1b[0m\t -oa, --output-android \tspecify output directory for Android project.`);
+            console.info(`\x1b[0m\t -oi, --output-ios \tspecify output directory for iOS project.`);
+            console.info(`\x1b[0m\t -h, --help \t\tprint command line options.`);
+    
+            process.exit(0);
+        }
 
-    process.argv.filter(arg => arg == "-h" || arg == "--help" ).forEach( aa => {
-        console.info(`\x1b[0m\t -e, --extract \tto enable extraction mode.
-             \t\tfor extract single json file that exported from Token Studio into directory-based.`);
-        console.info(`\x1b[0m\t -h, --help \tprint command line options.`);
-        process.exit(0);
+        if (v == "-e" ||  v == "--extract") {
+            console.info(`\x1b[1;32mExtraction mode enabled.`);
+            tokensToMultifiles();
+        }
+
+        if (v == "-oa" || v == "--output-android") {
+            outputForAndroid = process.argv[i+1];
+            if (outputForAndroid == null || outputForAndroid.startsWith("-")) {
+                console.info(`\x1b[1;31m-oa, --output-android was included but missing value, please check your command.`);
+                process.exit(0);
+            }
+        }
+
+        if (v == "-oi" || v == "--output-ios") {
+            outputForIos = process.argv[i+1];
+            if (outputForIos == null || outputForIos.startsWith("-")) {
+                console.info(`\x1b[1;31m-oi, --output-ios was included but missing value, please check your command.`);
+                process.exit(0);
+            }
+        }
+
     });
 }
 // 📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝📝
@@ -317,6 +342,19 @@ const sdExtended = await sd.extend({
 });
 
 await sdExtended.buildAllPlatforms();
+
+
+fs.copy('./build/android', outputForAndroid, (err) => {
+    if (err) console.error(err);
+    console.log('File was copied to destination (Android)');
+});
+
+fs.copy('./build/ios-swift', outputForIos, (err) => {
+    if (err) console.error(err);
+    console.log('File was copied to destination (iOS)');
+});
+
+
 /* 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 */
 
 
